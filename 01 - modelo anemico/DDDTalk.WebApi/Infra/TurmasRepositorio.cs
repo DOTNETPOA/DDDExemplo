@@ -2,10 +2,8 @@
 using DDDTalk.WebApi.Helpers;
 using DDDTalk.WebApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DDDTalk.WebApi.Infra
 {
@@ -32,7 +30,7 @@ namespace DDDTalk.WebApi.Infra
 
         public Turma Recuperar(string id)
         {
-            var sql = "SELEC Id, Descricao, LimiteAlunos FROM Turmas WHERE Id = @id";
+            var sql = "SELEC Id, Descricao, LimiteAlunos, (SELECT COUNT(Id) FROM Inscricoes WHERE TurmaId = @id) AS TotalInscritos FROM Turmas WHERE Id = @id";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var query = conexao.Query<dynamic>(sql, new { id }).ToList();
@@ -42,7 +40,8 @@ namespace DDDTalk.WebApi.Infra
                 {
                     Id = a.Id,
                     Descricao = a.Descricao,
-                    LimiteAlunos = a.LimiteAlunos
+                    LimiteAlunos = a.LimiteAlunos,
+                    TotalInscritos = a.TotalInscritos
                 })
                 .FirstOrDefault();
             }

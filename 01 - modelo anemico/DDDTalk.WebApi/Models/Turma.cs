@@ -11,5 +11,6 @@ namespace DDDTalk.WebApi.Models
         [Required]
         [Range(1,99, ErrorMessage ="Limite de alunos deve ser entre 1 e 99")]
         public int LimiteAlunos { get; set; }
+        public int TotalInscritos { get; set; }
     }
 }
