@@ -45,12 +45,36 @@ namespace DDDTalk.WebApi.Controllers
         {
             try
             {
-                return Ok(_alunosRepositorio.Recuperar(id));
+                var aluno = _alunosRepositorio.Recuperar(id);
+                if (aluno == null)
+                    return NotFound("Nenhum aluno referente ao id desejado");
+                return Ok(aluno);
             }
             catch (Exception e)
             {
                 return StatusCode(500, new { error = e.Message });
             }
         }
+
+        //[HttpPost("{alunoId}/Inscricoes")]
+        //public IActionResult RealizarInscricao(string alunoId, [FromBody]Inscricao novaInscrucao)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(ModelState);
+
+        //        if (_inscricoesRepositorio.RecuperarPorAluno(novoAluno.Email) != null)
+        //            return BadRequest("Email já está em uso: " + novoAluno.Email);
+
+        //        _alunosRepositorio.Novo(novoAluno);
+
+        //        return CreatedAtAction(nameof(Recuperar), new { novoAluno.Id }, novoAluno);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return StatusCode(500, new { error = e.Message });
+        //    }
+        //}
     }
 }

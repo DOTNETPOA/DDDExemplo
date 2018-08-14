@@ -1,0 +1,51 @@
+﻿using Dapper;
+using DDDTalk.WebApi.Helpers;
+using DDDTalk.WebApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace DDDTalk.WebApi.Infra
+{
+    public sealed class TurmasRepositorio
+    {
+        private readonly AppSettingsHelper _AppSettingsHelper;
+
+        public TurmasRepositorio(AppSettingsHelper _appSettingsHelper)
+        {
+            _AppSettingsHelper = _appSettingsHelper;
+        }
+
+        public void Nova(Turma novaTurma)
+        {
+            var sql = "INSERT INTO Turmas (Id, Descricao, LimiteAlunos) VALUES (@Id, @Descricao, @LimiteAlunos)";
+            using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
+            {
+                novaTurma.Id = Guid.NewGuid().ToString();
+                var resultado = conexao.Execute(sql, new { novaTurma.Id, novaTurma.Descricao, novaTurma.LimiteAlunos });
+                if (resultado <= 0)
+                    throw new InvalidOperationException("Não foi possível incluir a turma");
+            }
+        }
+
+        public Turma Recuperar(string id)
+        {
+            var sql = "SELEC Id, Descricao, LimiteAlunos FROM Turmas WHERE Id = @id";
+            using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
+            {
+                var query = conexao.Query<dynamic>(sql, new { id }).ToList();
+                if (!query.Any())
+                    return null;
+                return query.Select(a => new Turma
+                {
+                    Id = a.Id,
+                    Descricao = a.Descricao,
+                    LimiteAlunos = a.LimiteAlunos
+                })
+                .FirstOrDefault();
+            }
+        }
+    }
+}
