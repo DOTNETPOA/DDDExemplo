@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDDTalk.WebApi", "DDDTalk.WebApi\DDDTalk.WebApi.csproj", "{190832B1-BA2E-49B3-9A90-B4131674157B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTalk.WebApi", "DDDTalk.WebApi\DDDTalk.WebApi.csproj", "{190832B1-BA2E-49B3-9A90-B4131674157B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3C827A61-5056-44EC-BD5E-FCCCC5ACDE2E}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\database_versao_1.sql = Scripts\database_versao_1.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
