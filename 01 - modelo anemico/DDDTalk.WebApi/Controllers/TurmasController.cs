@@ -38,7 +38,7 @@ namespace DDDTalk.WebApi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Recuperar(string id)
         {
             try

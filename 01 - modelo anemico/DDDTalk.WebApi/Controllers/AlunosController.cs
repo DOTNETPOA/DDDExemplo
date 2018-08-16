@@ -44,7 +44,7 @@ namespace DDDTalk.WebApi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Recuperar(string id)
         {
             try
@@ -102,6 +102,7 @@ namespace DDDTalk.WebApi.Controllers
                 var inscricao = _inscricoesRepositorio.Recuperar(id);
                 if (inscricao == null)
                     return NotFound("Nenhuma inscrição referente ao id desejado");
+
                 return Ok(inscricao);
             }
             catch (Exception e)

@@ -25,7 +25,7 @@ CREATE TABLE [dbo].[Inscricoes](
 	[Id] [varchar](36) NOT NULL,
 	[AlunoId] [varchar](36) NOT NULL,
 	[TurmaId] [varchar](36) NOT NULL,
-	[IncritoEm] [datetime] NOT NULL,
+	[InscritoEm] [datetime] NOT NULL,
  CONSTRAINT [PK_Inscricoes] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

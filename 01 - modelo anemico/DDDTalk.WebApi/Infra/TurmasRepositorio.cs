@@ -30,7 +30,7 @@ namespace DDDTalk.WebApi.Infra
 
         public Turma Recuperar(string id)
         {
-            var sql = "SELEC Id, Descricao, LimiteAlunos, (SELECT COUNT(Id) FROM Inscricoes WHERE TurmaId = @id) AS TotalInscritos FROM Turmas WHERE Id = @id";
+            var sql = "SELECT Id, Descricao, LimiteAlunos, (SELECT COUNT(Id) FROM Inscricoes WHERE TurmaId = @id) AS TotalInscritos FROM Turmas WHERE Id = @id";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var query = conexao.Query<dynamic>(sql, new { id }).ToList();

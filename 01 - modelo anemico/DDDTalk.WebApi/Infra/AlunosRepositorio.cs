@@ -30,7 +30,7 @@ namespace DDDTalk.WebApi.Infra
 
         public Aluno RecuperarPorEmail(string email)
         {
-            var sql = "SELEC Id, Nome, Email, DataNascimento FROM Alunos WHERE Email = @email";
+            var sql = "SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Email = @email";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sql, new { email }).ToList();
@@ -49,7 +49,7 @@ namespace DDDTalk.WebApi.Infra
 
         public Aluno Recuperar(string id)
         {
-            var sql = "SELEC Id, Nome, Email, DataNascimento FROM Alunos WHERE Id = @id";
+            var sql = "SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Id = @id";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sql, new { id }).ToList();

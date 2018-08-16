@@ -30,7 +30,7 @@ namespace DDDTalk.WebApi.Infra
 
         public Inscricao Recuperar(string id)
         {
-            var sql = "SELEC Id, AlunoId, TurmaId, InscritoEm FROM Inscricoes WHERE Id = @id";
+            var sql = "SELECT Id, AlunoId, TurmaId, InscritoEm FROM Inscricoes WHERE Id = @id";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var query = conexao.Query<dynamic>(sql, new { id }).ToList();
