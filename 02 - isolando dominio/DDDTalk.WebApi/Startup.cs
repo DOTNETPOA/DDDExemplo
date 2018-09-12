@@ -23,7 +23,7 @@ namespace DDDTalk.WebApi
         {
             services.AddSingleton(new AppSettingsHelper(Configuration));
             services.AddScoped<IAlunosRepositorio, AlunosRepositorio>();
-            services.AddScoped<TurmasRepositorio>();
+            services.AddScoped<ITurmasRepositorio, TurmasRepositorio>();
             services.AddScoped<InscricoesRepositorio>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

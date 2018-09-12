@@ -1,13 +1,12 @@
 ﻿using Dapper;
 using DDDTalk.Dominio.Infra.Crosscutting;
-using DDDTalk.WebApi.Models;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace DDDTalk.WebApi.Infra
+namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
 {
-    public sealed class TurmasRepositorio
+    public sealed class TurmasRepositorio : ITurmasRepositorio
     {
         private readonly AppSettingsHelper _AppSettingsHelper;
 
@@ -16,15 +15,15 @@ namespace DDDTalk.WebApi.Infra
             _AppSettingsHelper = _appSettingsHelper;
         }
 
-        public void Nova(Turma novaTurma)
+        public Turma AdicionarESalvar(Turma turma)
         {
             var sql = "INSERT INTO Turmas (Id, Descricao, LimiteAlunos) VALUES (@Id, @Descricao, @LimiteAlunos)";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
-                novaTurma.Id = Guid.NewGuid().ToString();
-                var resultado = conexao.Execute(sql, new { novaTurma.Id, novaTurma.Descricao, novaTurma.LimiteAlunos });
+                var resultado = conexao.Execute(sql, new { turma.Id, turma.Descricao, turma.LimiteAlunos });
                 if (resultado <= 0)
                     throw new InvalidOperationException("Não foi possível incluir a turma");
+                return turma;
             }
         }
 
@@ -36,13 +35,7 @@ namespace DDDTalk.WebApi.Infra
                 var query = conexao.Query<dynamic>(sql, new { id }).ToList();
                 if (!query.Any())
                     return null;
-                return query.Select(a => new Turma
-                {
-                    Id = a.Id,
-                    Descricao = a.Descricao,
-                    LimiteAlunos = a.LimiteAlunos,
-                    TotalInscritos = a.TotalInscritos
-                })
+                return query.Select(a => new Turma((string)a.Id, (string)a.Descricao, (int)a.LimiteAlunos, (int)a.TotalInscritos))
                 .FirstOrDefault();
             }
         }

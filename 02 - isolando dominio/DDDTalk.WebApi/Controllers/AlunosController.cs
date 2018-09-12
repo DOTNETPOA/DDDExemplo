@@ -11,12 +11,12 @@ namespace DDDTalk.WebApi.Controllers
     public class AlunosController : ControllerBase
     {
         private readonly IAlunosRepositorio _alunosRepositorio;
-        private readonly TurmasRepositorio _turmasRepositorio;
+        private readonly ITurmasRepositorio _turmasRepositorio;
         private readonly InscricoesRepositorio _inscricoesRepositorio;
 
         public AlunosController(
             IAlunosRepositorio alunosRepositorio,
-            TurmasRepositorio turmasRepositorio,
+            ITurmasRepositorio turmasRepositorio,
             InscricoesRepositorio inscricoesRepositorio)
         {
             _alunosRepositorio = alunosRepositorio;
@@ -50,7 +50,7 @@ namespace DDDTalk.WebApi.Controllers
                 var aluno = _alunosRepositorio.Recuperar(id);
                 if (aluno == null)
                     return NotFound("Nenhum aluno referente ao id desejado");
-                return Ok(aluno);
+                return Ok(new AlunoViewModel(aluno.Id, aluno.Nome, aluno.Email, aluno.Idade(DateTime.Now)));
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace DDDTalk.WebApi.Controllers
                 if (turma == null)
                     return BadRequest("Turma informada é inválida");
 
-                if (turma.TotalInscritos + 1 > turma.LimiteAlunos)
+                if (turma.VagasDisponiveis > 1)
                     return BadRequest("Não existe mais vagas para a turma");
 
                 novaInscricao.AlunoId = alunoId;

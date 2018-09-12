@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDDTalk.Dominio;
 using DDDTalk.WebApi.Infra;
 using DDDTalk.WebApi.Models;
 using Microsoft.AspNetCore.Http;
@@ -13,24 +14,22 @@ namespace DDDTalk.WebApi.Controllers
     [ApiController]
     public class TurmasController : ControllerBase
     {
-        private readonly TurmasRepositorio _turmasRepositorio;
+        private readonly ITurmasRepositorio _turmasRepositorio;
 
-        public TurmasController(TurmasRepositorio turmasRepositorio)
+        public TurmasController(ITurmasRepositorio turmasRepositorio)
         {
             _turmasRepositorio = turmasRepositorio;
         }
 
         [HttpPost]
-        public IActionResult Nova([FromBody]Turma novaTurma)
+        public IActionResult Nova([FromBody]TurmaInputModel novaTurma)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                
-                _turmasRepositorio.Nova(novaTurma);
+                var turma = Turma.Nova(novaTurma.Descricao, novaTurma.LimiteAlunos);
+                _turmasRepositorio.AdicionarESalvar(turma);
 
-                return CreatedAtAction(nameof(Recuperar), new { novaTurma.Id }, novaTurma);
+                return CreatedAtAction(nameof(Recuperar), new { turma.Id }, new TurmaViewModel(turma.Id, turma.Descricao, turma.VagasDisponiveis  ));
             }
             catch (Exception e)
             {
@@ -46,7 +45,7 @@ namespace DDDTalk.WebApi.Controllers
                 var turma = _turmasRepositorio.Recuperar(id);
                 if (turma == null)
                     return NotFound("Nenhuma turma com o id desejado");
-                return Ok(turma);
+                return Ok(new TurmaViewModel(turma.Id, turma.Descricao, turma.VagasDisponiveis));
             }
             catch (Exception e)
             {
