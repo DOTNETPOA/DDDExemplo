@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DDDTalk.Dominio.Infra.Crosscutting\DDDTalk.Dominio.Infra.Crosscutting.csproj" />
+    <ProjectReference Include="..\DDDTalk.Dominio\DDDTalk.Dominio.csproj" />
+  </ItemGroup>
+
+</Project>

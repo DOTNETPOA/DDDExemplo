@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTalk.WebApi", "DDDTalk.WebApi\DDDTalk.WebApi.csproj", "{190832B1-BA2E-49B3-9A90-B4131674157B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3C827A61-5056-44EC-BD5E-FCCCC5ACDE2E}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\database_versao_1.sql = Scripts\database_versao_1.sql
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTalk.Dominio", "DDDTalk.Dominio\DDDTalk.Dominio.csproj", "{3EBE1CB5-42BF-4E69-B05C-A0605A43E25E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDDTalk.Dominio.Infra.SqlServer.Dapper", "DDDTalk.Dominio.Infra.SqlServer.Dapper\DDDTalk.Dominio.Infra.SqlServer.Dapper.csproj", "{CE17210C-9693-4169-9D36-C1800C6E2833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDDTalk.Dominio.Infra.Crosscutting", "DDDTalk.Dominio.Infra.Crosscutting\DDDTalk.Dominio.Infra.Crosscutting.csproj", "{BAD0E7AB-BEE5-4106-A9E6-BD3FD710D704}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{190832B1-BA2E-49B3-9A90-B4131674157B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190832B1-BA2E-49B3-9A90-B4131674157B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190832B1-BA2E-49B3-9A90-B4131674157B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190832B1-BA2E-49B3-9A90-B4131674157B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EBE1CB5-42BF-4E69-B05C-A0605A43E25E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EBE1CB5-42BF-4E69-B05C-A0605A43E25E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EBE1CB5-42BF-4E69-B05C-A0605A43E25E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EBE1CB5-42BF-4E69-B05C-A0605A43E25E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE17210C-9693-4169-9D36-C1800C6E2833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE17210C-9693-4169-9D36-C1800C6E2833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE17210C-9693-4169-9D36-C1800C6E2833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE17210C-9693-4169-9D36-C1800C6E2833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD0E7AB-BEE5-4106-A9E6-BD3FD710D704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD0E7AB-BEE5-4106-A9E6-BD3FD710D704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD0E7AB-BEE5-4106-A9E6-BD3FD710D704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD0E7AB-BEE5-4106-A9E6-BD3FD710D704}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C0B3302D-A821-4578-8EA2-1D8D6E8B8D79}
+	EndGlobalSection
+EndGlobal
