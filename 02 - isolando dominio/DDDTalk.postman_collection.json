@@ -114,6 +114,182 @@
 						"description": "Recuperar uma turma pelo seu id"
 					},
 					"response": []
+				},
+				{
+					"name": "REALIZAR INSCRICAO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"TurmaId\": \"c9603ba8-b9d9-4432-98ba-459da3f99cda\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Alunos/a032e426-d3af-4431-a066-fdd9432bd3c7/Inscricoes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Alunos",
+								"a032e426-d3af-4431-a066-fdd9432bd3c7",
+								"Inscricoes"
+							]
+						},
+						"description": "Realiar inscricao"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02 - isolando dominio",
+			"item": [
+				{
+					"name": "CRIAR ALUNO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Nome\": \"Gabriel Schmitt Kohlrausch\",\n\t\"Email\": \"gabriel@society.com.br\",\n\t\"DataNascimento\": \"1983-06-27T00:00:00\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Alunos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Alunos"
+							]
+						},
+						"description": "Criar novo aluno"
+					},
+					"response": []
+				},
+				{
+					"name": "RECUPERAR ALUNO POR ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:5000/api/Alunos/6a2ef71f-670c-469a-bab8-df78338fdff1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Alunos",
+								"6a2ef71f-670c-469a-bab8-df78338fdff1"
+							]
+						},
+						"description": "Recuperar um aluno pelo seu id"
+					},
+					"response": []
+				},
+				{
+					"name": "CRIAR TURMA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Descricao\": \"Turma de karate\",\n\t\"LimiteAlunos\": 10\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Turmas/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Turmas",
+								""
+							]
+						},
+						"description": "Criar uma turma"
+					},
+					"response": []
+				},
+				{
+					"name": "RECUPERAR TURMA POR ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:5000/api/Turmas/f8b9b72e-650b-48ea-aef8-c71173aabfad",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Turmas",
+								"f8b9b72e-650b-48ea-aef8-c71173aabfad"
+							]
+						},
+						"description": "Recuperar uma turma pelo seu id"
+					},
+					"response": []
+				},
+				{
+					"name": "REALIZAR INSCRICAO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"TurmaId\": \"f8b9b72e-650b-48ea-aef8-c71173aabfad\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Alunos/6a2ef71f-670c-469a-bab8-df78338fdff1/Inscricoes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Alunos",
+								"6a2ef71f-670c-469a-bab8-df78338fdff1",
+								"Inscricoes"
+							]
+						},
+						"description": "Realiar inscricao"
+					},
+					"response": []
 				}
 			]
 		}
