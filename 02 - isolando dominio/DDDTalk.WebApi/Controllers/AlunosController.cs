@@ -31,7 +31,9 @@ namespace DDDTalk.WebApi.Controllers
                     return BadRequest("Email já está em uso: " + novoAluno.Email);
                 _alunosRepositorio.IncluirESalvar(aluno);
 
-                return CreatedAtAction(nameof(Recuperar), new { aluno.Id }, new AlunoViewModel(aluno.Id, aluno.Nome, aluno.Email, aluno.Idade(DateTime.Now)));
+                return CreatedAtAction(nameof(Recuperar), new { aluno.Id },
+                    new AlunoViewModel(aluno.Id, aluno.Nome, aluno.Email, aluno.Idade(DateTime.Now),
+                                        aluno.Inscricoes.Select(a => new InscricaoViewModel(aluno.Id, new InscricaoViewModel.TurmaViewModel(a.Turma.Id, a.Turma.Descricao), a.InscritoEm)).ToList()));
             }
             catch (Exception e)
             {
@@ -47,7 +49,8 @@ namespace DDDTalk.WebApi.Controllers
                 var aluno = _alunosRepositorio.Recuperar(id);
                 if (aluno == null)
                     return NotFound("Nenhum aluno referente ao id desejado");
-                return Ok(new AlunoViewModel(aluno.Id, aluno.Nome, aluno.Email, aluno.Idade(DateTime.Now)));
+                return Ok(new AlunoViewModel(aluno.Id, aluno.Nome, aluno.Email, aluno.Idade(DateTime.Now),
+                                aluno.Inscricoes.Select(a => new InscricaoViewModel(aluno.Id, new InscricaoViewModel.TurmaViewModel(a.Turma.Id, a.Turma.Descricao), a.InscritoEm)).ToList()));
             }
             catch (Exception e)
             {
@@ -69,8 +72,10 @@ namespace DDDTalk.WebApi.Controllers
                     return BadRequest("Turma informada é inválida");
 
                 var inscricao = aluno.RealizarInscricao(turma);
+                _alunosRepositorio.Atualizar(aluno);
 
-                return CreatedAtAction(nameof(RecuperarInscricao), new { alunoId, inscricao.Id }, new InscricaoViewModel(aluno.Id, turma.Id, inscricao.InscritoEm));
+                return CreatedAtAction(nameof(RecuperarInscricao), new { alunoId, inscricao.Id }, 
+                        new InscricaoViewModel(aluno.Id, new InscricaoViewModel.TurmaViewModel(inscricao.Turma.Id, inscricao.Turma.Descricao), inscricao.InscritoEm));
             }
             catch (Exception e)
             {
@@ -90,7 +95,7 @@ namespace DDDTalk.WebApi.Controllers
                 if (inscricao == null)
                     return NotFound("Nenhuma inscrição referente ao id desejado");
 
-                return Ok(new InscricaoViewModel(aluno.Id, inscricao.Turma.Id, inscricao.InscritoEm));
+                return Ok(new InscricaoViewModel(aluno.Id, new InscricaoViewModel.TurmaViewModel(inscricao.Turma.Id, inscricao.Turma.Descricao), inscricao.InscritoEm));
             }
             catch (Exception e)
             {

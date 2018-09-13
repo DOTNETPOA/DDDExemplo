@@ -106,7 +106,7 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Email = @email;";
             var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Email = @email)";
-            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT Id FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Email = @email))";
+            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Email = @email))";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { email }).ToList();
@@ -129,7 +129,7 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Id = @id;";
             var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Id = @id)";
-            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT Id FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Id = @id))";
+            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Id = @id))";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { id }).ToList();
