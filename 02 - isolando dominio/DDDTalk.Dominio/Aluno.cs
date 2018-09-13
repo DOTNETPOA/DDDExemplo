@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -7,25 +9,36 @@ namespace DDDTalk.Dominio
 {    
     public sealed class Aluno
     {
-        
-        internal Aluno(string id, string nome, string email, DateTime dataNascimento)
+        private IList<Inscricao> _inscricoes;
+
+        internal Aluno(string id, string nome, string email, DateTime dataNascimento, IList<Inscricao> inscricoes)
         {
             Id = id;
             Nome = nome;
             Email = email;
             DataNascimento = dataNascimento;
+            _inscricoes = inscricoes ?? new List<Inscricao>();
         }
 
         public string Id { get; }
         public string Nome { get; }
         public string Email { get;  }
         public DateTime DataNascimento { get; }
+        public IEnumerable<Inscricao> Inscricoes => _inscricoes;
+
         public int Idade(DateTime quando)
         {
             var idade = quando.Year - DataNascimento.Year;
             return quando < DataNascimento.AddYears(idade)
                 ? idade--
                 : idade;
+        }
+
+        public Inscricao RealizarInscricao(Turma turma)
+        {
+            var inscricao = Inscricao.Nova(turma);
+            _inscricoes.Add(inscricao);
+            return inscricao;
         }
 
         public static Aluno Novo(string nome, string email, DateTime dataNascimento)
@@ -39,7 +52,7 @@ namespace DDDTalk.Dominio
                 throw new InvalidOperationException("Email inválido");
             if(dataNascimento >= DateTime.Now)
                 throw new InvalidOperationException("Data de nascimento deve ser menor que hoje");
-            return new Aluno(Guid.NewGuid().ToString(), nome, email, dataNascimento);
+            return new Aluno(Guid.NewGuid().ToString(), nome, email, dataNascimento, null);
         }
     }
 }

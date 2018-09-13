@@ -1,7 +1,6 @@
 ﻿using DDDTalk.Dominio;
 using DDDTalk.Dominio.Infra.Crosscutting;
 using DDDTalk.Dominio.Infra.SqlServer.Dapper;
-using DDDTalk.WebApi.Infra;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,6 @@ namespace DDDTalk.WebApi
             services.AddSingleton(new AppSettingsHelper(Configuration));
             services.AddScoped<IAlunosRepositorio, AlunosRepositorio>();
             services.AddScoped<ITurmasRepositorio, TurmasRepositorio>();
-            services.AddScoped<InscricoesRepositorio>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using DDDTalk.Dominio;
-using DDDTalk.WebApi.Infra;
 using DDDTalk.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +12,13 @@ namespace DDDTalk.WebApi.Controllers
     {
         private readonly IAlunosRepositorio _alunosRepositorio;
         private readonly ITurmasRepositorio _turmasRepositorio;
-        private readonly InscricoesRepositorio _inscricoesRepositorio;
 
         public AlunosController(
             IAlunosRepositorio alunosRepositorio,
-            ITurmasRepositorio turmasRepositorio,
-            InscricoesRepositorio inscricoesRepositorio)
+            ITurmasRepositorio turmasRepositorio)
         {
             _alunosRepositorio = alunosRepositorio;
             _turmasRepositorio = turmasRepositorio;
-            _inscricoesRepositorio = inscricoesRepositorio;
         }
 
         [HttpPost]
@@ -59,13 +56,10 @@ namespace DDDTalk.WebApi.Controllers
         }
 
         [HttpPost("{alunoId}/Inscricoes")]
-        public IActionResult RealizarInscricao(string alunoId, [FromBody]Inscricao novaInscricao)
+        public IActionResult RealizarInscricao(string alunoId, [FromBody]InscricaoInputModel novaInscricao)
         {
             try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
+            {                
                 var aluno = _alunosRepositorio.Recuperar(alunoId);
                 if (aluno == null)
                     return NotFound("Aluno inválido");
@@ -74,14 +68,9 @@ namespace DDDTalk.WebApi.Controllers
                 if (turma == null)
                     return BadRequest("Turma informada é inválida");
 
-                if (turma.VagasDisponiveis > 1)
-                    return BadRequest("Não existe mais vagas para a turma");
+                var inscricao = aluno.RealizarInscricao(turma);
 
-                novaInscricao.AlunoId = alunoId;
-                novaInscricao.InscritoEm = DateTime.Now;
-                _inscricoesRepositorio.Nova(novaInscricao);
-
-                return CreatedAtAction(nameof(RecuperarInscricao), new { alunoId, novaInscricao.Id }, novaInscricao);
+                return CreatedAtAction(nameof(RecuperarInscricao), new { alunoId, inscricao.Id }, new InscricaoViewModel(aluno.Id, turma.Id, inscricao.InscritoEm));
             }
             catch (Exception e)
             {
@@ -97,11 +86,11 @@ namespace DDDTalk.WebApi.Controllers
                 var aluno = _alunosRepositorio.Recuperar(alunoId);
                 if (aluno == null)
                     return NotFound("Nenhum aluno referente ao id desejado");
-                var inscricao = _inscricoesRepositorio.Recuperar(id);
+                var inscricao = aluno.Inscricoes.FirstOrDefault(i => i.Id.Equals(id));
                 if (inscricao == null)
                     return NotFound("Nenhuma inscrição referente ao id desejado");
 
-                return Ok(inscricao);
+                return Ok(new InscricaoViewModel(aluno.Id, inscricao.Turma.Id, inscricao.InscritoEm));
             }
             catch (Exception e)
             {

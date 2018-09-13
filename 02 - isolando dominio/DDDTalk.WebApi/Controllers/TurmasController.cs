@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DDDTalk.Dominio;
-using DDDTalk.WebApi.Infra;
 using DDDTalk.WebApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DDDTalk.WebApi.Controllers
