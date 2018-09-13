@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DDDTalk.Dominio.Infra.Crosscutting;
+using DDDTalk.Dominio.Infra.Crosscutting.Core;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
@@ -15,8 +16,9 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
             _AppSettingsHelper = _appSettingsHelper;
         }
 
-        public Aluno IncluirESalvar(Aluno aluno)
+        public Resultado<Aluno, Falha> IncluirESalvar(Aluno aluno)
         {
+            var sucesso = false;
             var sqlAluno = "INSERT INTO Alunos (Id, Nome, Email, DataNascimento) VALUES (@Id, @Nome, @Email, @DataNascimento)";
             var sqlInscricao = "INSERT INTO Inscricoes (Id, AlunoId, TurmaId, InscritoEm) VALUES (@Id, @AlunoId, @TurmaId, @InscritoEm)";
             var updateTurma = "UPDATE Turmas SET TotalInscritos = @TotalInscritos WHERE Id = @Id";
@@ -29,35 +31,37 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
                     {
                         var resultado = conexao.Execute(sqlAluno, new { aluno.Id, aluno.Nome, aluno.Email, aluno.DataNascimento }, transacao);
                         if (resultado <= 0)
-                            throw new InvalidOperationException("Não foi possível incluir o aluno");
+                            return Falha.Nova(400, "Não foi possível incluir o aluno");
                         foreach (var inscricao in aluno.Inscricoes)
                         {
                             resultado = conexao.Execute(sqlInscricao, new {inscricao.Id, AlunoId = aluno.Id, TurmaId = inscricao.Turma.Id, inscricao.InscritoEm }, transacao);
                             if (resultado <= 0)
-                                throw new InvalidOperationException("Não foi possível incluir o aluno");
+                                return Falha.Nova(400, "Não foi possível incluir inscrição para o aluno");
                             resultado = conexao.Execute(updateTurma, new { inscricao.Turma.Id, inscricao.Turma.TotalInscritos }, transacao);
-                            if(resultado <= 0)
-                                throw new InvalidOperationException("Não foi possível atualziar a turma");
+                            if (resultado <= 0)
+                                return Falha.Nova(400, "Não foi possível atualizar a turma");
                         }
-                        
                         transacao.Commit();
+                        sucesso = true;
                         return aluno;
                     }
                     catch (Exception ex)
                     {
-                        transacao.Rollback();
-                        throw new InvalidOperationException(ex.Message);
+                        return Falha.NovaComException(ex);
                     }
                     finally
                     {
+                        if (!sucesso)
+                            transacao.Rollback();
                         conexao.Close();
                     }
                 }
             }
         }
 
-        public Aluno Atualizar(Aluno aluno)
+        public Resultado<Aluno, Falha> Atualizar(Aluno aluno)
         {
+            var sucesso = false;
             var sqlAluno = "UPDATE Alunos SET Nome = @Nome, Email = @Email, DataNascimento = @DataNascimento WHERE Id = @Id";
             var sqlInscricaoInsert = "INSERT INTO Inscricoes (Id, AlunoId, TurmaId, InscritoEm) VALUES (@Id, @AlunoId, @TurmaId, @InscritoEm)";
             var sqlInscricaoDelete = "DELETE FROM Inscricoes WHERE Id = @Id";
@@ -70,51 +74,55 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
                     try
                     {
                         var alunoPreAlteracao = Recuperar(aluno.Id);
+                        if (alunoPreAlteracao.EhFalha)
+                            return alunoPreAlteracao.Falha;
                         var resultado = conexao.Execute(sqlAluno, new { aluno.Id, aluno.Nome, aluno.Email, aluno.DataNascimento }, transacao);
                         if (resultado <= 0)
-                            throw new InvalidOperationException("Não foi possível atualizar o aluno");
+                            return Falha.Nova(400, "Não foi possível atualizar o aluno");
                         foreach (var inscricao in aluno.Inscricoes)
                         {
-                            if(!alunoPreAlteracao.Inscricoes.Any(a=> a.Id == inscricao.Id))
+                            if(!alunoPreAlteracao.Sucesso.Inscricoes.Any(a=> a.Id == inscricao.Id))
                             {
                                 resultado = conexao.Execute(sqlInscricaoInsert, new { inscricao.Id, AlunoId = aluno.Id, TurmaId = inscricao.Turma.Id, inscricao.InscritoEm }, transacao);
                                 if (resultado <= 0)
-                                    throw new InvalidOperationException("Não foi possível incluir inscrição");
+                                    return Falha.Nova(400, "Não foi possível incluir inscrição");
                                 resultado = conexao.Execute(updateTurma, new { inscricao.Turma.Id, inscricao.Turma.TotalInscritos }, transacao);
                                 if (resultado <= 0)
-                                    throw new InvalidOperationException("Não foi possível atualizar a turma");
+                                    return Falha.Nova(400, "Não foi possível atualizar a turma");
                             }
                         }
 
-                        foreach (var inscricao in alunoPreAlteracao.Inscricoes)
+                        foreach (var inscricao in alunoPreAlteracao.Sucesso.Inscricoes)
                         {
                             if (!aluno.Inscricoes.Any(a => a.Id == inscricao.Id))
                             {
                                 resultado = conexao.Execute(sqlInscricaoDelete, new { inscricao.Id }, transacao );
                                 if (resultado <= 0)
-                                    throw new InvalidOperationException("Não foi possível excluir inscrição");
+                                    return Falha.Nova(400, "Não foi possível excluir inscrição");
                                 resultado = conexao.Execute(updateTurma, new { inscricao.Turma.Id, inscricao.Turma.TotalInscritos }, transacao);
                                 if (resultado <= 0)
-                                    throw new InvalidOperationException("Não foi possível atualizar a turma");
+                                    return Falha.Nova(400, "Não foi possível atualizar a turma");
                             }
                         }
                         transacao.Commit();
+                        sucesso = true;
                         return aluno;
                     }
                     catch (Exception ex)
                     {
-                        transacao.Rollback();
-                        throw new InvalidOperationException(ex.Message);
+                        return Falha.NovaComException(ex);
                     }
                     finally
                     {
+                        if (!sucesso)
+                            transacao.Rollback();
                         conexao.Close();
                     }
                 }
             }
         }
 
-        public Aluno RecuperarPorEmail(string email)
+        public Resultado<Aluno, Falha> RecuperarPorEmail(string email)
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Email = @email;";
             var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Email = @email)";
@@ -123,13 +131,13 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { email }).ToList();
                 if (!alunoQuery.Any())
-                    return null;
+                    return Falha.Nova(404, "Nenhum aluno encontrado");
                 var turmas = conexao
                                 .Query<dynamic>(sqlTurmas, new { email })
                                 .Select(t=> new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteAlunos, (int)t.TotalInscritos))
                                 .ToList();
                 var inscricoes = conexao
-                                    .Query<dynamic>(sqlInscricao, new { })
+                                    .Query<dynamic>(sqlInscricao, new { email })
                                     .Select(i=> new Inscricao((string)i.Id, turmas.FirstOrDefault(t=> t.Id.Equals((string)i.TurmaId)), (DateTime)i.InscritoEm))
                                     .ToList();
                 return alunoQuery.Select(a => new Aluno((string)a.Id, (string)a.Nome, (string)a.Email, (DateTime)a.DataNascimento, inscricoes))
@@ -137,7 +145,7 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
             }
         }
 
-        public Aluno Recuperar(string id)
+        public Resultado<Aluno, Falha> Recuperar(string id)
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Id = @id;";
             var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Id = @id)";
@@ -146,7 +154,7 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { id }).ToList();
                 if (!alunoQuery.Any())
-                    return null;
+                    return Falha.Nova(404, "Nenhum aluno encontrado");
                 var turmas = conexao
                                 .Query<dynamic>(sqlTurmas, new { id })
                                 .Select(t => new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteAlunos, (int)t.TotalInscritos))

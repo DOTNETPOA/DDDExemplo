@@ -1,0 +1,1 @@
+ALTER TABLE Turmas ADD TotalInscritos INT

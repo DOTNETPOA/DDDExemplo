@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDDTalk.Dominio.Infra.Crosscutting.Core;
+using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DDDTalk.Dominio.Infra.SqlServer.Dapper")]
@@ -17,10 +18,10 @@ namespace DDDTalk.Dominio
         public Turma Turma { get; }
         public DateTime InscritoEm { get; }
 
-        public static Inscricao Nova(Turma turma)
+        public static Resultado<Inscricao,Falha> Nova(Turma turma)
         {
             if (turma.VagasDisponiveis <= 0)
-                throw new InvalidOperationException("Sem vagas disponiveis");
+                return Falha.Nova(400,"Sem vagas disponiveis");
             turma.IncrementarInscricao();
             return new Inscricao(Guid.NewGuid().ToString(), turma, DateTime.Now);
         }

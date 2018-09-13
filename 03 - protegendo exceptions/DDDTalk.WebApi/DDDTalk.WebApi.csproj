@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>2a3b7734-fd7d-4d05-9199-98e52a39ae8e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="Infra\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DDDTalk.Dominio.Infra.Crosscutting\DDDTalk.Dominio.Infra.Crosscutting.csproj" />
+    <ProjectReference Include="..\DDDTalk.Dominio.Infra.SqlServer.Dapper\DDDTalk.Dominio.Infra.SqlServer.Dapper.csproj" />
+    <ProjectReference Include="..\DDDTalk.Dominio\DDDTalk.Dominio.csproj" />
+  </ItemGroup>
+
+</Project>
