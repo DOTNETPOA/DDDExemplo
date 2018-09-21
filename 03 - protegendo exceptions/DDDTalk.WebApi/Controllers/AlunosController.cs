@@ -28,11 +28,11 @@ namespace DDDTalk.WebApi.Controllers
             try
             {
                 if( Aluno.Novo(novoAluno.Nome, novoAluno.Email, novoAluno.DataNascimento) is var aluno && aluno.EhFalha)
-                    return BadRequest(aluno.Falha);
+                    return StatusCode(aluno.Falha.Codigo, aluno.Falha);
                 if (_alunosRepositorio.RecuperarPorEmail(aluno.Sucesso.Email).EhSucesso)
                     return BadRequest(Falha.Nova(400, "Email já está em uso: " + novoAluno.Email));
                 if (_alunosRepositorio.IncluirESalvar(aluno.Sucesso) is var resultado && resultado.EhFalha)
-                    return BadRequest(resultado.Falha);
+                    return StatusCode(resultado.Falha.Codigo, resultado.Falha);
 
                 return CreatedAtAction(nameof(Recuperar), new { aluno.Sucesso.Id },
                     new AlunoViewModel(aluno.Sucesso.Id, aluno.Sucesso.Nome, aluno.Sucesso.Email, aluno.Sucesso.Idade(DateTime.Now),

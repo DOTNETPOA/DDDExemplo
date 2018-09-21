@@ -38,10 +38,9 @@ namespace DDDTalk.WebApi.Controllers
         {
             try
             {
-                var turma = _turmasRepositorio.Recuperar(id);
-                if (turma == null)
-                    return NotFound("Nenhuma turma com o id desejado");
-                return Ok(new TurmaViewModel(turma.Id, turma.Descricao, turma.VagasDisponiveis));
+                if (_turmasRepositorio.Recuperar(id) is var turma && turma.EhFalha)
+                    return StatusCode(turma.Falha.Codigo, turma.Falha);
+                return Ok(new TurmaViewModel(turma.Sucesso.Id, turma.Sucesso.Descricao, turma.Sucesso.VagasDisponiveis));
             }
             catch (Exception e)
             {
