@@ -79,6 +79,18 @@ namespace DDDTalk.WebApi.Controllers
                 if (turma.TotalInscritos + 1 > turma.LimiteAlunos)
                     return BadRequest("Não existe mais vagas para a turma");
 
+                #region suposicoes
+                // Validar se aluno tem idade suficiente para a turma desejada
+
+                // Validar se aluno está adimplente
+
+                // Turma deve estar aberta
+
+                // Após gerar inscrição gerar mensallidades conforme regra da turma
+
+                // Enviar email de boas vindas
+                #endregion
+
                 novaInscricao.AlunoId = alunoId;
                 novaInscricao.InscritoEm = DateTime.Now;
                 _inscricoesRepositorio.Nova(novaInscricao);
