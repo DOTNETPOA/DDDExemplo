@@ -27,7 +27,7 @@ namespace DDDTalk.WebApi.Controllers
         {
             try
             {
-                if( Aluno.Novo(novoAluno.Nome, novoAluno.Email, novoAluno.DataNascimento) is var aluno && aluno.EhFalha)
+                if ( Aluno.Novo(novoAluno.Nome, novoAluno.Email, novoAluno.DataNascimento) is var aluno && aluno.EhFalha)
                     return StatusCode(aluno.Falha.Codigo, aluno.Falha);
                 if (_alunosRepositorio.RecuperarPorEmail(aluno.Sucesso.Email).EhSucesso)
                     return BadRequest(Falha.Nova(400, "Email já está em uso: " + novoAluno.Email));

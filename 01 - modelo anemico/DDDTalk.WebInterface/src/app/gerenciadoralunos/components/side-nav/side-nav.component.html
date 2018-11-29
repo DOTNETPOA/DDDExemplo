@@ -1,0 +1,19 @@
+
+<mat-sidenav-container class="alunos-nav-container">
+    <mat-sidenav #sidenav class="alunos-sidenav mat-elevation-z10"
+                opened="true"
+                mode="over">
+        <mat-toolbar color="primary">Menu</mat-toolbar>
+        <mat-nav-list>
+            <mat-list-item *ngFor="let aluno of alunos | async">
+                <a matLine [routerLink]="['/alunos', aluno.id]">{{aluno.nome}}</a>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+    <div class="alunos-sidenav-content">
+        <app-toolbar (toggleSidenav)="sidenav.toggle()"></app-toolbar>
+        <div class="wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</mat-sidenav-container>

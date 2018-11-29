@@ -2,6 +2,7 @@
 using DDDTalk.WebApi.Helpers;
 using DDDTalk.WebApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -63,6 +64,36 @@ namespace DDDTalk.WebApi.Infra
                     DataNascimento = a.DataNascimento
                 })
                 .FirstOrDefault();
+            }
+        }
+
+        public void Atualizar(Aluno aluno)
+        {
+            var sql = "UPDATE Alunos SET Nome = @Nome, Email = @Email, DataNascimento = @DataNascimento Where Id = @Id";
+            using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
+            {
+                var resultado = conexao.Execute(sql, new { aluno.Id, aluno.Nome, aluno.Email, aluno.DataNascimento });
+                if (resultado <= 0)
+                    throw new InvalidOperationException("Não foi possível alterar o aluno");
+            }
+        }
+
+        public IEnumerable<Aluno> Recuperar()
+        {
+            var sql = "SELECT Id, Nome, Email, DataNascimento FROM Alunos";
+            using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
+            {
+                var alunoQuery = conexao.Query<dynamic>(sql, new { }).ToList();
+                if (!alunoQuery.Any())
+                    return null;
+                return alunoQuery.Select(a => new Aluno
+                {
+                    Id = a.Id,
+                    Nome = a.Nome,
+                    Email = a.Email,
+                    DataNascimento = a.DataNascimento
+                })
+                .ToList();
             }
         }
     }

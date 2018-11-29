@@ -1,5 +1,6 @@
 ﻿using System;
 using DDDTalk.Dominio;
+using DDDTalk.Dominio.Turmas;
 using DDDTalk.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ namespace DDDTalk.WebApi.Controllers
         {
             try
             {
-                if (Turma.Nova(novaTurma.Descricao, novaTurma.LimiteAlunos) is var turma && turma.EhFalha)
+                if (Turma.Nova(novaTurma.Descricao, novaTurma.LimiteIdade, novaTurma.LimiteAlunos) is var turma && turma.EhFalha)
                     return StatusCode(turma.Falha.Codigo, turma.Falha);
                 _turmasRepositorio.AdicionarESalvar(turma.Sucesso);
 

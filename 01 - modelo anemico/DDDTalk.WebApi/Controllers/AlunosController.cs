@@ -44,12 +44,53 @@ namespace DDDTalk.WebApi.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public IActionResult Editar(string id, [FromBody]Aluno alunoEditado)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                if (_alunosRepositorio.Recuperar(id) == null)
+                    return NotFound("Aluno não encontrado");
+
+                if (_alunosRepositorio.RecuperarPorEmail(alunoEditado.Email) is var alunoEncontrado && alunoEncontrado != null && alunoEncontrado.Id != id)
+                    return BadRequest("Email já está em uso: " + alunoEditado.Email);
+
+                alunoEditado.Id = id;
+                _alunosRepositorio.Atualizar(alunoEditado);
+
+                return Ok(alunoEditado);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { error = e.Message });
+            }
+        }
+
         [HttpGet("{id}")]
         public IActionResult Recuperar(string id)
         {
             try
             {
                 var aluno = _alunosRepositorio.Recuperar(id);
+                if (aluno == null)
+                    return NotFound("Nenhum aluno referente ao id desejado");
+                return Ok(aluno);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { error = e.Message });
+            }
+        }
+
+        [HttpGet()]
+        public IActionResult RecuperarTodos()
+        {
+            try
+            {
+                var aluno = _alunosRepositorio.Recuperar();
                 if (aluno == null)
                     return NotFound("Nenhum aluno referente ao id desejado");
                 return Ok(aluno);

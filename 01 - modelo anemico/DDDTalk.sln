@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3C82
 		Scripts\database_versao_1.sql = Scripts\database_versao_1.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDDTalk.WinFormsUserInterface", "DDDTalk.WinFormsUserInterface\DDDTalk.WinFormsUserInterface.csproj", "{7205A0FC-A0B9-470F-96A4-F59F96C59DF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{190832B1-BA2E-49B3-9A90-B4131674157B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{190832B1-BA2E-49B3-9A90-B4131674157B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{190832B1-BA2E-49B3-9A90-B4131674157B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7205A0FC-A0B9-470F-96A4-F59F96C59DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7205A0FC-A0B9-470F-96A4-F59F96C59DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7205A0FC-A0B9-470F-96A4-F59F96C59DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7205A0FC-A0B9-470F-96A4-F59F96C59DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

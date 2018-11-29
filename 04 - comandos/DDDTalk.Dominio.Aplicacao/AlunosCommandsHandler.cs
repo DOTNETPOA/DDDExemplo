@@ -1,5 +1,7 @@
-﻿using DDDTalk.Dominio.Comandos;
+﻿using DDDTalk.Dominio.Alunos;
+using DDDTalk.Dominio.Comandos;
 using DDDTalk.Dominio.Infra.Crosscutting.Core;
+using DDDTalk.Dominio.Turmas;
 using System;
 using System.Linq;
 
@@ -12,7 +14,7 @@ namespace DDDTalk.Dominio.Aplicacao
 
     public interface IRealizarInscricaoCommandHandler
     {
-        Resultado<Inscricao, Falha> Executar(RealizarInscricaoComando comando);
+        Resultado<Aluno.Inscricao, Falha> Executar(RealizarInscricaoComando comando);
     }
 
     public sealed class GerenciadorComandosAluno : INovoAlunoCommandHandler, IRealizarInscricaoCommandHandler
@@ -46,7 +48,7 @@ namespace DDDTalk.Dominio.Aplicacao
             }
         }
 
-        public Resultado<Inscricao, Falha> Executar(RealizarInscricaoComando comando)
+        public Resultado<Aluno.Inscricao, Falha> Executar(RealizarInscricaoComando comando)
         {
             try
             {

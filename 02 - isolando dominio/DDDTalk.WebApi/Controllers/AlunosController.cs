@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using DDDTalk.Dominio;
+using DDDTalk.Dominio.Alunos;
+using DDDTalk.Dominio.Turmas;
 using DDDTalk.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 

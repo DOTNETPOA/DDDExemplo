@@ -1,5 +1,6 @@
 ﻿using System;
 using DDDTalk.Dominio;
+using DDDTalk.Dominio.Turmas;
 using DDDTalk.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,10 +22,10 @@ namespace DDDTalk.WebApi.Controllers
         {
             try
             {
-                var turma = Turma.Nova(novaTurma.Descricao, novaTurma.LimiteAlunos);
+                var turma = Turma.Nova(novaTurma.Descricao, novaTurma.LimiteIdade, novaTurma.LimiteAlunos);
                 _turmasRepositorio.AdicionarESalvar(turma);
 
-                return CreatedAtAction(nameof(Recuperar), new { turma.Id }, new TurmaViewModel(turma.Id, turma.Descricao, turma.VagasDisponiveis  ));
+                return CreatedAtAction(nameof(Recuperar), new { turma.Id }, new TurmaViewModel(turma.Id, turma.Descricao, novaTurma.LimiteIdade, turma.VagasDisponiveis  ));
             }
             catch (Exception e)
             {
@@ -40,7 +41,7 @@ namespace DDDTalk.WebApi.Controllers
                 var turma = _turmasRepositorio.Recuperar(id);
                 if (turma == null)
                     return NotFound("Nenhuma turma com o id desejado");
-                return Ok(new TurmaViewModel(turma.Id, turma.Descricao, turma.VagasDisponiveis));
+                return Ok(new TurmaViewModel(turma.Id, turma.Descricao, turma.LimiteIdade, turma.VagasDisponiveis));
             }
             catch (Exception e)
             {

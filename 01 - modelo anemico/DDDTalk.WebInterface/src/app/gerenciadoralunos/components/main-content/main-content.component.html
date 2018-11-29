@@ -1,0 +1,15 @@
+<div *ngIf="!aluno">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="aluno">
+    <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{aluno.nome}}</mat-card-title>
+          <mat-card-subtitle>Nascimento {{aluno.dataNascimento | date: 'short'}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Email {{aluno.email}}</p>
+        </mat-card-content>
+      </mat-card>
+</div>
+

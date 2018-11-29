@@ -25,6 +25,7 @@ namespace DDDTalk.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddSingleton(new AppSettingsHelper(Configuration));
             services.AddScoped<AlunosRepositorio>();
             services.AddScoped<TurmasRepositorio>();
@@ -38,7 +39,7 @@ namespace DDDTalk.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseMvc();
         }
     }

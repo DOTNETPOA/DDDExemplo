@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using DDDTalk.Dominio.Alunos;
 using DDDTalk.Dominio.Infra.Crosscutting;
 using DDDTalk.Dominio.Infra.Crosscutting.Core;
+using DDDTalk.Dominio.Turmas;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
@@ -125,8 +127,8 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
         public Resultado<Aluno, Falha> RecuperarPorEmail(string email)
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Email = @email;";
-            var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Email = @email)";
-            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Email = @email))";
+            var sqlInscricao = "SELECT Id, AlunoId, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Email = @email)";
+            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos, LimiteIdade FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Email = @email))";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { email }).ToList();
@@ -134,11 +136,11 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
                     return Falha.Nova(404, "Nenhum aluno encontrado");
                 var turmas = conexao
                                 .Query<dynamic>(sqlTurmas, new { email })
-                                .Select(t=> new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteAlunos, (int)t.TotalInscritos))
+                                .Select(t=> new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteIdade, (int)t.LimiteAlunos, (int)t.TotalInscritos))
                                 .ToList();
                 var inscricoes = conexao
                                     .Query<dynamic>(sqlInscricao, new { email })
-                                    .Select(i=> new Inscricao((string)i.Id, turmas.FirstOrDefault(t=> t.Id.Equals((string)i.TurmaId)), (DateTime)i.InscritoEm))
+                                    .Select(i => new Aluno.Inscricao((string)i.Id, (string)i.AlunoId, turmas.FirstOrDefault(t=> t.Id.Equals((string)i.TurmaId)), (DateTime)i.InscritoEm))
                                     .ToList();
                 return alunoQuery.Select(a => new Aluno((string)a.Id, (string)a.Nome, (string)a.Email, (DateTime)a.DataNascimento, inscricoes))
                 .FirstOrDefault();
@@ -149,7 +151,7 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
         {
             var sqlAluno = @"SELECT Id, Nome, Email, DataNascimento FROM Alunos WHERE Id = @id;";
             var sqlInscricao = "SELECT Id, TurmaId, InscritoEm FROM Inscricoes WHERE AlunoId IN (SELECT Id FROM Alunos WHERE Id = @id)";
-            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Id = @id))";
+            var sqlTurmas = "SELECT Id, Descricao, LimiteAlunos, TotalInscritos, LimiteIdade FROM Turmas WHERE Id IN (SELECT TurmaId FROM Inscricoes WHERE AlunoId = (SELECT Id FROM Alunos WHERE Id = @id))";
             using (var conexao = new SqlConnection(_AppSettingsHelper.GetConnectionString()))
             {
                 var alunoQuery = conexao.Query<dynamic>(sqlAluno, new { id }).ToList();
@@ -157,11 +159,11 @@ namespace DDDTalk.Dominio.Infra.SqlServer.Dapper
                     return Falha.Nova(404, "Nenhum aluno encontrado");
                 var turmas = conexao
                                 .Query<dynamic>(sqlTurmas, new { id })
-                                .Select(t => new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteAlunos, (int)t.TotalInscritos))
+                                .Select(t => new Turma((string)t.Id, (string)t.Descricao, (int)t.LimiteIdade, (int)t.LimiteAlunos, (int)t.TotalInscritos))
                                 .ToList();
                 var inscricoes = conexao
                                     .Query<dynamic>(sqlInscricao, new { id })
-                                    .Select(i => new Inscricao((string)i.Id, turmas.FirstOrDefault(t => t.Id.Equals((string)i.TurmaId)), (DateTime)i.InscritoEm))
+                                    .Select(i => new Aluno.Inscricao((string)i.Id, (string)i.AlunoId, turmas.FirstOrDefault(t => t.Id.Equals((string)i.TurmaId)), (DateTime)i.InscritoEm))
                                     .ToList();
                 return alunoQuery.Select(a => new Aluno((string)a.Id, (string)a.Nome, (string)a.Email, (DateTime)a.DataNascimento, inscricoes))
                 .FirstOrDefault();

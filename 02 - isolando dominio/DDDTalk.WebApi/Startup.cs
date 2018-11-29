@@ -1,6 +1,8 @@
 ﻿using DDDTalk.Dominio;
+using DDDTalk.Dominio.Alunos;
 using DDDTalk.Dominio.Infra.Crosscutting;
 using DDDTalk.Dominio.Infra.SqlServer.Dapper;
+using DDDTalk.Dominio.Turmas;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
